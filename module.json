@@ -1,0 +1,7 @@
+{
+  "name": "jqtags/jq-label",
+  "jqtags/jq-label": {
+    "js": [ "jqtags.label.js"],
+    "on" : ["webmodules/jqtag"]
+  }
+}
