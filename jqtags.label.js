@@ -3,9 +3,11 @@ _tag_('jqtags.label', function(date) {
     var CHARS = {
         "lowerLetter": "abcdefghijklmnopqrstuvwxyz",
         "upperLetter": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        "symbol": ",.?/\\(^)![]{}*&^%$#'\"",
+        "symbol": "?/\\(^)![]{}*&^%$#'\"",
         "number": "0123456789",
-        "space": " "
+        "space": " ",
+        "decimal": ".",
+        "comma": ","
     };
 
     for (var i in CHARS) {
@@ -46,6 +48,10 @@ _tag_('jqtags.label', function(date) {
                         this.types[i] = "space";
                     } else if (/[0-9]/.test(ch)) {
                         this.types[i] = "number";
+                    } else if ("." === ch) {
+                        this.types[i] = "decimal";
+                    } else if ("," === ch) {
+                        this.types[i] = "comma";
                     } else if (/[a-z]/.test(ch)) {
                         this.types[i] = "lowerLetter";
                     } else if (/[A-Z]/.test(ch)) {
@@ -79,12 +85,11 @@ _tag_('jqtags.label', function(date) {
         },
         shuffle: function() {
             var str = [];
-            for(i=0; i < this.letters.length; i++){
+            for (i = 0; i < this.letters.length; i++) {
                 str.push(this.randomChar(this.types[this.letters[i]]));
             }
             return str.join("");
         }
     };
 
-})
-;
+});
