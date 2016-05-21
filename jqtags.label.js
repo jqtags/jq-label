@@ -28,19 +28,23 @@ _tag_('jqtags.label', function(date) {
                 type: "string",
                 default: "shuffle",
                 onChange: "textOnChange"
+            },
+            steps: {
+                type: "int",
+                default: 25
             }
         },
         attachedCallback: function() {
-            this.setlabel(this.$.label);
+            this.setlabel(this.$.label,"");
         },
         textOnChange: function(key, old, newval) {
-            this.setlabel(newval);
+            this.setlabel(newval,old);
         },
-        setlabel: function(newval) {
-            if (this.$.animation === 'shuffle') {
+        setlabel: function(newval,oldval) {
+            if (this.$.animation.indexOf('shuffle') === 0) {
                 var str = newval.split('');
                 this.types = [];
-                this.letters = [];
+                this.letters = str;
                 // Looping through all the chars of the string
                 for (var i = 0; i < str.length; i++) {
                     var ch = str[i];
@@ -59,7 +63,13 @@ _tag_('jqtags.label', function(date) {
                     } else {
                         this.types[i] = "symbol";
                     }
-                    this.letters.push(i);
+                }
+                if(this.$.animation === "shuffle-order"){
+                    this.order_asc = (newval>oldval);
+                } else if(this.$.animation === "shuffle-up"){
+                    this.order_asc = true;
+                } else if(this.$.animation === "shuffle-down"){
+                    this.order_asc = false;
                 }
                 this.animate();
             } else {
@@ -68,25 +78,33 @@ _tag_('jqtags.label', function(date) {
         },
         animate: function(_count) {
             var self = this;
-            var count = _count || 5;
+            var count = _count || 0;
             window.clearTimeout(this.timer);
-            self.$.innerHTML = self.shuffle();
+            self.$.innerHTML = self.shuffle(_count);
             this.timer = window.setTimeout(function() {
-                if (count === 1) {
+                if (count === self.$.steps) {
                     self.$.innerHTML = self.$.label;
                 } else {
-                    self.animate(--count);
+                    self.animate(++count);
                 }
-            }, 50);
+            }, 100/_count);
         },
-        randomChar: function(type) {
+        randomChar: function(type,counter,i) {
             var arr = CHARS[type] || CHARS.symbol;
+            if(this.order_asc === true){
+                var len = counter < arr.length ? counter : (arr.length-1);
+                return arr[len] > this.letters[i] ? this.letters[i] : arr[len];
+            } else if(this.order_asc === false){
+                counter = arr.length - Math.min(counter,arr.length);
+                var len2 = counter < arr.length ? counter : (arr.length-1);
+                return arr[len2] < this.letters[i] ? this.letters[i] : arr[len2];
+            }
             return arr[Math.floor(Math.random() * arr.length)];
         },
-        shuffle: function() {
+        shuffle: function(_count) {
             var str = [];
-            for (i = 0; i < this.letters.length; i++) {
-                str.push(this.randomChar(this.types[this.letters[i]]));
+            for (i = 0; i < this.types.length; i++) {
+                str.push(this.randomChar(this.types[i],_count,i));
             }
             return str.join("");
         }
