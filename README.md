@@ -6,5 +6,5 @@
 
 To Shuffle number
 ```html
-<jq-label label="15" animation="shuffle" ></jq-label>
+<jq-label label="John Doe" animation="shuffle" ></jq-label>
 ```
