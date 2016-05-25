@@ -32,6 +32,10 @@ _tag_('jqtags.label', function(date) {
             steps: {
                 type: "int",
                 default: 25
+            },
+            delay : {
+                type: "int",
+                default: 100
             }
         },
         attachedCallback: function() {
@@ -87,7 +91,7 @@ _tag_('jqtags.label', function(date) {
                 } else {
                     self.animate(++count);
                 }
-            }, 100/_count);
+            }, self.$.delay/(self.$.steps-_count+1));
         },
         randomChar: function(type,counter,i) {
             var arr = CHARS[type] || CHARS.symbol;
